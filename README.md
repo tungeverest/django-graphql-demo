@@ -1,10 +1,17 @@
-https://www.youtube.com/watch?v=vtXmOWltHAM&list=PLsC9YeVUTz3-YuHLkA2Kx5TqaPEHioldV
-https://docs.graphene-python.org/projects/django/en/latest/
-https://docs.graphene-python.org/projects/django/en/latest/installation/
+# Documents
+Create a services GraphQL Server demo.
 
+[Video Guide]( https://www.youtube.com/watch?v=vtXmOWltHAM&list=PLsC9YeVUTz3-YuHLkA2Kx5TqaPEHioldV)
+
+[GraphQL server lib doc](https://docs.graphene-python.org/projects/django/en/latest/)
+
+[Install](https://docs.graphene-python.org/projects/django/en/latest/installation/)
+
+```bash
 pip install graphene-django
+```
 
-
+```python
 THIRD_PARTY_APPS = [
     "graphene_django",
 ]
@@ -20,18 +27,30 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 GRAPHENE = {
     "SCHEMA": "prod_graphql.schema.my_schema"
 }
-## schema.py
+```
+
+# schema.py
+
+```python
 import graphene
+from todos_app import schema
 
 
-class MyQuery(graphene.ObjectType):
+class MyQuery(schema.TodoQuery, graphene.ObjectType):
     name=graphene.String(default_value="TungDZ")
-    
+    title = graphene.String(default_value="App123")
+
+class MyMutation(schema.TodoMutation, graphene.ObjectType):
+    pass
 
 
-my_schema = graphene.Schema(query=MyQuery)
+my_schema = graphene.Schema(query=MyQuery, mutation=MyMutation)
+```
 
-## test
+# Run API
+```bash
+- Demo
+
 {
   name:name
 }
@@ -40,8 +59,9 @@ my_schema = graphene.Schema(query=MyQuery)
   name
   title
 }
+.........
+- Get All
 
-get All
 {
   todos {
     id
@@ -50,7 +70,9 @@ get All
     
   }
 }
-get ID
+.........
+- Get by ID
+
 {
   todos(id:3) {
     id
@@ -59,8 +81,8 @@ get ID
     
   }
 }
-
-Create new todo
+.........
+- Create new todo
 
 mutation{
 	createTodo(title:"todo 123") {
@@ -86,8 +108,9 @@ Query variables
 {
     "title": "test variable"
 }
+.........
+- Update Todo by ID
 
-Update Todo by ID
 mutation{
 	udpateTodo(id:6, title:"todo 6666") {
 		todo {
@@ -112,22 +135,22 @@ Query String
     "id": 7,
     "title" : "edit todo 7"
 }
-
-Delete Todo by ID:
+.........
+- Delete Todo by ID:
 
 mutation {
-    deleteTodo(id:6) {
-        message
+  deleteTodo(id:6) {
+      message
     }
 }
 -----
 mutation DeleteTodo($id:Int!){
 	deleteTodo(id:$id) {
-        message
+      message
     }
 } 
 
 {
     "id": 7
 }
-
+```
